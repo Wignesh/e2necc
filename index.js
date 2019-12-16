@@ -8,7 +8,7 @@ const url = "http://www.e2necc.com/EGGDailyAndMontlyPrices.aspx";
 
 app.get("/", (req, res) => {
   const header = [];
-  const namakkal = {}
+  const namakkal = {};
   res.setHeader("Content-Type", "application/json");
   axios
     .get("http://www.e2necc.com/EGGDailyAndMontlyPrices.aspx")
@@ -27,17 +27,30 @@ app.get("/", (req, res) => {
               .toString();
           }
         });
-        chere("span > table > tbody > tr")
-        .eq(15)
-        .find("td")
-        .each(function(i, elem) {
-            namakkal[header[i]] = chere(this).text().toString();
-        });
-        res.end(JSON.stringify(namakkal, null, 3));
+      chere("span > table > tbody > tr").each((p, elem) => {
+        elem = cheerio.load(elem);
+        if (
+          elem("td")
+            .eq(0)
+            .text()
+            .toString()
+            .trim() == "Namakkal"
+        ) {
+          elem("td").each(function(k, el) {
+            namakkal[header[k]] = elem("td")
+              .eq(k)
+              .text()
+              .toString();
+          });
+        }
+      });
+      res.end(JSON.stringify(namakkal, null, 3));
     })
     .catch(err => {
       res.send(err);
     });
 });
 
-app.listen(process.env.PORT || 3000, () => console.log(`App listening on port ${port}!`));
+app.listen(process.env.PORT || 3000, () =>
+  console.log(`App listening on port ${port}!`)
+);
