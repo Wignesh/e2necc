@@ -4,14 +4,14 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-const url = "http://www.e2necc.com/EGGDailyAndMontlyPrices.aspx";
+const url = "http://ancient-lowlands-9003660624.herokuapp.com/index.php?http://www.e2necc.com/EGGDailyAndMontlyPrices.aspx";
 
 app.get("/", (req, res) => {
   const header = [];
   const namakkal = {};
   res.setHeader("Content-Type", "application/json");
   axios
-    .get("http://www.e2necc.com/EGGDailyAndMontlyPrices.aspx")
+    .get(url)
     .then(response => response.data)
     .then(data => cheerio.load(data))
     .then(chere => {
